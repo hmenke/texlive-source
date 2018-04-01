@@ -77,7 +77,7 @@ matrix:
 # this is the architecture travis-ci is running on.
 # Rename to the currently built architecture
 before_deploy:
-  - if [ -n "$package" ]; then sudo mv inst/bin/x86_64-pc-linux-gnu inst/bin/$tldir ; tar czvf ${package} -C inst/bin .; fi
+  - if [ -n "$package" ]; then sudo mv inst/bin/* inst/bin/$tldir ; tar czvf ${package} -C inst/bin .; fi
 
 deploy:
   provider: releases
