@@ -112,11 +112,7 @@ matrix:
       env:
       - tldir=x86_64-darwin
       - package=texlive-bin-x86_64-darwin.tar.gz
-      addons:
-        homebrew:
-          packages:
-          - ccache
-      before_script:
+      before_script: brew update && brew install ccache
       script: |
         export CCACHE_DIR="/tmp/ccache/${tldir}"
         export CC="ccache cc"
