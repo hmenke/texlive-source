@@ -73,11 +73,10 @@ matrix:
       env:
       - tldir=x86_64-linux
       - package=texlive-bin-x86_64-linux.tar.gz
-      - CCACHE_DIR=/tmp/ccache/x86_64-linux
       script: |
         docker run \
         -e CC="ccache cc" -e CXX="ccache c++" \
-        -e CCACHE_DIR="${CCACHE_DIR}" -v "${CCACHE_DIR}":"${CCACHE_DIR}" \
+        -e CCACHE_DIR="/tmp/ccache/${tldir}" -v "/tmp/ccache/${tldir}":"/tmp/ccache/${tldir}" \
         -e TL_MAKE_FLAGS="${TL_MAKE_FLAGS}" \
         -v ${TRAVIS_BUILD_DIR}:/texlive -w /texlive \
         -it --rm debian:jessie sh -c \
@@ -87,11 +86,10 @@ matrix:
       env:
       - tldir=i386-linux
       - package=texlive-bin-i386-linux.tar.gz
-      - CCACHE_DIR=/tmp/ccache/i386-linux
       script: |
         docker run \
         -e CC="ccache cc" -e CXX="ccache c++" \
-        -e CCACHE_DIR="${CCACHE_DIR}" -v "${CCACHE_DIR}":"${CCACHE_DIR}" \
+        -e CCACHE_DIR="/tmp/ccache/${tldir}" -v "/tmp/ccache/${tldir}":"/tmp/ccache/${tldir}" \
         -e TL_MAKE_FLAGS="${TL_MAKE_FLAGS}" \
         -v ${TRAVIS_BUILD_DIR}:/texlive -w /texlive \
         -it --rm i386/debian:jessie sh -c \
@@ -101,11 +99,10 @@ matrix:
       env:
       - tldir=x86_64-linuxmusl
       - package=texlive-bin-x86_64-musl.tar.gz
-      - CCACHE_DIR=/tmp/ccache/x86_64-linuxmusl
       script: |
         docker run \
         -e CC="ccache cc" -e CXX="ccache c++" \
-        -e CCACHE_DIR="${CCACHE_DIR}" -v "${CCACHE_DIR}":"${CCACHE_DIR}" \
+        -e CCACHE_DIR="/tmp/ccache/${tldir}" -v "/tmp/ccache/${tldir}":"/tmp/ccache/${tldir}" \
         -e TL_MAKE_FLAGS="${TL_MAKE_FLAGS}" \
         -v ${TRAVIS_BUILD_DIR}:/texlive -w /texlive \
         -it --rm alpine:3.2 sh -c \
@@ -115,8 +112,12 @@ matrix:
       env:
       - tldir=x86_64-darwin
       - package=texlive-bin-x86_64-darwin.tar.gz
-      before_script:
-      script: ./Build -C
+      before_script: brew install ccache
+      script: |
+        export CCACHE_DIR="/tmp/ccache/${tldir}"
+        export CC="ccache cc"
+        export CXX="ccache c++"
+        ./Build -C
 
 # somehow all binaries are always put into x86_64-pc-linux-gnu, probably because
 # this is the architecture travis-ci is running on.
